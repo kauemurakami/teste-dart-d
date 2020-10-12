@@ -15,3 +15,9 @@ final errorMessage = TextStyle(
   fontSize: 12,
   color: Colors.red,
 );
+final linkText = TextStyle(
+  color: Colors.blue[200],
+  decoration: TextDecoration.underline,
+);
+final repoName =
+    TextStyle(fontSize: 16, color: mainColor, fontWeight: FontWeight.bold);

@@ -5,9 +5,4 @@ class UserRepository {
   final MyProvider apiClient;
 
   UserRepository({@required this.apiClient}) : assert(apiClient != null);
-
-// add(obj){
-//     return apiClient.add( obj );
-// }
-
 }

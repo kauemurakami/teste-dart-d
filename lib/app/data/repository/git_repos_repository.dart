@@ -5,4 +5,6 @@ class GitReposRepository {
   final MyProvider apiClient;
 
   GitReposRepository({@required this.apiClient}) : assert(apiClient != null);
+
+  getAll() => apiClient.getAllRepositories();
 }
