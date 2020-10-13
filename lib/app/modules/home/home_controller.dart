@@ -1,12 +1,21 @@
 import 'package:get/get_state_manager/src/simple/get_state.dart';
 import 'package:meta/meta.dart';
-import 'package:teste_dart_digital/app/data/model/repositorio_model.dart';
 import 'package:get/get.dart';
+import 'package:teste_dart_digital/app/data/model/repositorio_model.dart';
 
 class HomeController extends GetxController {
   final gitRepository;
   HomeController({@required this.gitRepository})
       : assert(gitRepository != null);
+
+  final _message = ''.obs;
+  get message => this._message.value;
+  set message(value) => this._message.value = value;
+
+  final searchResults = List<GitRepository>().obs;
+
+  final repositorios = List<GitRepository>().obs;
+  set repositorios(value) => this.repositorios.value = value;
 
   @override
   void onInit() {
@@ -14,37 +23,37 @@ class HomeController extends GetxController {
     super.onInit();
   }
 
-  final _message = ''.obs;
-  get message => this._message.value;
-  set message(value) => this._message.value = value;
-
-  final searchResults = List<GitRepository>().obs;
-  set searchResults(value) => this.searchResults.value = value;
-
-  final repositorios = List<GitRepository>().obs;
-  set repositorios(value) => this.repositorios.value = value;
+  final _countList = 0.obs;
+  get countList => this._countList.value;
+  set countList(value) => this._countList.value = value;
 
   onChangedFiltro(value) {
-    searchResults.clear();
     if (value.length > 3) {
       repositorios.forEach((repo) {
-        if (repo.name.contains(value)) {
+        if (repo.name.toLowerCase().contains(value.toLowerCase())) {
           searchResults.add(repo);
-        } else {
-          getAllRepositories();
-          return;
         }
+        countList = searchResults.length;
         repositorios = searchResults;
       });
-    } else {
-      return;
+    }
+
+    if (countList == 0) {
+      this.message = 'Nenhum resultado encontrado';
+    }
+
+    if (value.length < 2) {
+      this.message = '';
+      searchResults.clear();
+      getAllRepositories();
+      countList = repositorios.length;
     }
   }
 
-  onSavedFiltro(value) => '';
-  validateFiltro(value) => '';
-
   getAllRepositories() async {
-    await gitRepository.getAll().then((data) => repositorios = data);
+    await gitRepository.getAll().then((data) {
+      repositorios = data;
+      this.countList = repositorios.length;
+    });
   }
 }
