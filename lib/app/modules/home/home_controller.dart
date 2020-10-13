@@ -14,15 +14,31 @@ class HomeController extends GetxController {
     super.onInit();
   }
 
+  final _message = ''.obs;
+  get message => this._message.value;
+  set message(value) => this._message.value = value;
+
+  final searchResults = List<GitRepository>().obs;
+  set searchResults(value) => this.searchResults.value = value;
+
   final repositorios = List<GitRepository>().obs;
   set repositorios(value) => this.repositorios.value = value;
 
-  filtro() {}
-
   onChangedFiltro(value) {
+    searchResults.clear();
     if (value.length > 3) {
-      //filtrar lista
-    } else {}
+      repositorios.forEach((repo) {
+        if (repo.name.contains(value)) {
+          searchResults.add(repo);
+        } else {
+          getAllRepositories();
+          return;
+        }
+        repositorios = searchResults;
+      });
+    } else {
+      return;
+    }
   }
 
   onSavedFiltro(value) => '';
@@ -30,6 +46,5 @@ class HomeController extends GetxController {
 
   getAllRepositories() async {
     await gitRepository.getAll().then((data) => repositorios = data);
-    print(repositorios[0].id);
   }
 }

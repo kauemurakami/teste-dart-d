@@ -11,13 +11,15 @@ class MyProvider {
   MyProvider({@required this.httpClient});
 
   getAllRepositories() async {
-    var response = await httpClient.get('$baseUrl');
-    if (response.statusCode == 200) {
-      print(response.statusCode.toString());
-      print(response.body);
-      return gitRepositoryFromJson(response.body);
-    } else {
-      return AppError.fromJson(jsonDecode(response.body));
-    }
+    try {
+      var response = await httpClient.get(
+        '$baseUrl',
+      );
+      if (response.statusCode == 200) {
+        print(response.statusCode.toString());
+        print(response.body);
+        return gitRepositoryFromJson(response.body);
+      }
+    } catch (e) {}
   }
 }
